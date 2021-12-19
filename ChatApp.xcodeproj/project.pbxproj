@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A8120079276FA32700A59F98 /* ChatAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8120078276FA32700A59F98 /* ChatAppApp.swift */; };
-		A812007B276FA32700A59F98 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A812007A276FA32700A59F98 /* ContentView.swift */; };
+		A812007B276FA32700A59F98 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A812007A276FA32700A59F98 /* SignInView.swift */; };
 		A812007D276FA32900A59F98 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A812007C276FA32900A59F98 /* Assets.xcassets */; };
 		A8120080276FA32900A59F98 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A812007F276FA32900A59F98 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -16,7 +16,7 @@
 /* Begin PBXFileReference section */
 		A8120075276FA32700A59F98 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8120078276FA32700A59F98 /* ChatAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatAppApp.swift; sourceTree = "<group>"; };
-		A812007A276FA32700A59F98 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A812007A276FA32700A59F98 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		A812007C276FA32900A59F98 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A812007F276FA32900A59F98 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -52,7 +52,7 @@
 			isa = PBXGroup;
 			children = (
 				A8120078276FA32700A59F98 /* ChatAppApp.swift */,
-				A812007A276FA32700A59F98 /* ContentView.swift */,
+				A812007A276FA32700A59F98 /* SignInView.swift */,
 				A812007C276FA32900A59F98 /* Assets.xcassets */,
 				A812007E276FA32900A59F98 /* Preview Content */,
 			);
@@ -137,7 +137,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A812007B276FA32700A59F98 /* ContentView.swift in Sources */,
+				A812007B276FA32700A59F98 /* SignInView.swift in Sources */,
 				A8120079276FA32700A59F98 /* ChatAppApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
