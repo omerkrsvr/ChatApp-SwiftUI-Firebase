@@ -6,12 +6,27 @@
 //
 
 import SwiftUI
+import Firebase
+
+class FirebaseManager: NSObject {
+    
+    let auth: Auth
+    static let shared = FirebaseManager()
+    
+    override init(){
+        FirebaseApp.configure()
+        self.auth = Auth.auth()
+        super.init()
+    }
+}
+
 
 struct SignInView: View {
 
     @State var isLoginMode = false
-    @State var eMail = ""
+    @State var email = ""
     @State var password = ""
+
     
     var body: some View {
         
@@ -39,7 +54,7 @@ struct SignInView: View {
                     }
                     
                     Group {
-                        TextField("Email", text: $eMail)
+                        TextField("Email", text: $email)
                             .keyboardType(.emailAddress)
                             .autocapitalization(.none)
                         SecureField("Password", text: $password)
@@ -49,7 +64,9 @@ struct SignInView: View {
                     .cornerRadius(10)
                    
                     HStack{
-                        Button(action: {}) {
+                        Button(action: {
+                            handleAction()
+                        }) {
                             Spacer()
                             Text(isLoginMode ? "Log In" : "Create Account")
                                 .foregroundColor(.white)
@@ -59,6 +76,14 @@ struct SignInView: View {
                         .background(Color.blue)
                         .cornerRadius(15)
                     }.padding()
+                    
+                    VStack(alignment:.center){
+                        Text(loginStatusMessage)
+                            .foregroundColor(.red)
+                    }
+                    
+                        
+                        
                 }
             }
             .padding()
@@ -68,7 +93,44 @@ struct SignInView: View {
         
       
     }
+    private func handleAction(){
+        if isLoginMode{
+            logInUser()
+            print("login action")
+        }else{
+            
+            createNewUser()
+            print("create account action")
+        }
+    }
+     @State var loginStatusMessage = ""
+    
+    private func createNewUser(){
+        //Auth.auth().createUser
+        FirebaseManager.shared.auth.createUser(withEmail: email, password: password) { result, err in
+            if let err = err {
+                self.loginStatusMessage = "Failed to create new user.\(err.localizedDescription)"
+                return
+            }
+            self.loginStatusMessage = "Succes new user."
+        }
+    }
+    
+    private func logInUser(){
+        
+        FirebaseManager.shared.auth.signIn(withEmail: email, password: password) { result, err in
+            if let err = err {
+                self.loginStatusMessage = "\(err.localizedDescription)"
+                return
+            }
+            self.loginStatusMessage = "Succes log in!"
+        }
+        
+    }
+    
+
 }
+
 
 struct SignInView_Previews: PreviewProvider {
     static var previews: some View {
