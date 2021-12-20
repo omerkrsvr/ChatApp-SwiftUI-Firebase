@@ -6,13 +6,67 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
+
+struct ChatUser {
+
+    let uid, username ,email, profileImageURL: String
+}
+
+class MessagesViewModel: ObservableObject {
+    
+    @Published var errorMessage = ""
+    @Published var chatUser: ChatUser?
+    
+    init(){
+        fetchCurrentUser()
+    }
+    private func fetchCurrentUser(){
+        
+        guard let uid  = FirebaseManager.shared.auth.currentUser?.uid
+            else {
+                self.errorMessage = "Could not find firebase uid"
+                return
+                
+            }
+        
+        FirebaseManager.shared.firestore.collection("users")
+            .document(uid).getDocument { snapshot, error in
+                if let error = error{
+                    self.errorMessage = "Failed to fetch current user: \(error)"
+                    return
+                }
+                self.errorMessage = "123"
+                
+                guard let data = snapshot?.data() else{
+                    self.errorMessage = "No data found"
+                    return
+                    
+                }
+                //print(data)
+                //self.errorMessage = "Data: \(data.description)"
+                
+                let uid = data["uid"] as? String ?? ""
+                let username = data["username"] as? String ?? ""
+                let email = data["email"] as? String ?? ""
+                let profileImageUrl = data["profileImageUrl"] as? String ?? ""
+                self.chatUser = ChatUser(uid: uid, username: username, email: email, profileImageURL: profileImageUrl)
+            }
+    }
+}
+
+
 
 struct MessagesView: View {
     @State var shouldShowLogOutOptions = false
+    
+    @ObservedObject private var vm = MessagesViewModel()
+    
     var body: some View {
         NavigationView{
             
             VStack{
+                //Text("Current user id \(vm.errorMessage)")
                 customNavBar
                 .padding(.horizontal)
                 .actionSheet(isPresented: $shouldShowLogOutOptions) {
@@ -30,12 +84,20 @@ struct MessagesView: View {
     }
     private var customNavBar: some View{
         HStack(spacing:16){
-            Image(systemName: "person.fill")
-                .font(.system(size: 25))
+            
+            WebImage(url: URL(string: vm.chatUser?.profileImageURL ?? ""))
+                .resizable()
+                .scaledToFill()
+                .frame(width: 60,height: 60)
+                .clipped()
+                .cornerRadius(50)
+                .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label),lineWidth: 2))
+                .shadow(radius: 5)
+            
             VStack(alignment:.leading,spacing: 4){
-                Text("Username")
+                Text(vm.chatUser?.username ?? "username")
                     .fontWeight(.bold)
-                HStack{
+                HStack(spacing:2){
                     Circle().frame(width: 10, height: 10)
                         .foregroundColor(.green)
                     Text("online")
