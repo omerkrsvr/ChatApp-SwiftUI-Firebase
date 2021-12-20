@@ -13,6 +13,7 @@
 		A8120080276FA32900A59F98 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A812007F276FA32900A59F98 /* Preview Assets.xcassets */; };
 		A8120089276FB79E00A59F98 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A8120088276FB79E00A59F98 /* GoogleService-Info.plist */; };
 		A8572D17276FD39C005416C8 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8572D16276FD39C005416C8 /* ImagePicker.swift */; };
+		A8ADAC0D277082CB00ECB7C1 /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8ADAC0C277082CB00ECB7C1 /* MessagesView.swift */; };
 		B0142E86E7A62858CDEC5CBE /* Pods_ChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F4C4F967AE244376EE93A35 /* Pods_ChatApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -26,6 +27,7 @@
 		A812007F276FA32900A59F98 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A8120088276FB79E00A59F98 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A8572D16276FD39C005416C8 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		A8ADAC0C277082CB00ECB7C1 /* MessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
 		CA3B1B5D292ACC0CAB276023 /* Pods-ChatApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.release.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -76,6 +78,7 @@
 				A812007C276FA32900A59F98 /* Assets.xcassets */,
 				A812007E276FA32900A59F98 /* Preview Content */,
 				A8572D16276FD39C005416C8 /* ImagePicker.swift */,
+				A8ADAC0C277082CB00ECB7C1 /* MessagesView.swift */,
 			);
 			path = ChatApp;
 			sourceTree = "<group>";
@@ -220,6 +223,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A8ADAC0D277082CB00ECB7C1 /* MessagesView.swift in Sources */,
 				A8572D17276FD39C005416C8 /* ImagePicker.swift in Sources */,
 				A812007B276FA32700A59F98 /* SignInView.swift in Sources */,
 				A8120079276FA32700A59F98 /* ChatAppApp.swift in Sources */,
