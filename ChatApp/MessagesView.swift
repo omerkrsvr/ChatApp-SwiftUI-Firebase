@@ -8,20 +8,20 @@
 import SwiftUI
 import SDWebImageSwiftUI
 
-struct ChatUser {
-
-    let uid, username ,email, profileImageURL: String
-}
-
 class MessagesViewModel: ObservableObject {
     
     @Published var errorMessage = ""
     @Published var chatUser: ChatUser?
     
     init(){
+        
+        DispatchQueue.main.async {
+            self.isUserCurrentlyLoggedOut = FirebaseManager.shared.auth.currentUser?.uid == nil
+        }
+        
         fetchCurrentUser()
     }
-    private func fetchCurrentUser(){
+    func fetchCurrentUser(){
         
         guard let uid  = FirebaseManager.shared.auth.currentUser?.uid
             else {
@@ -36,22 +36,22 @@ class MessagesViewModel: ObservableObject {
                     self.errorMessage = "Failed to fetch current user: \(error)"
                     return
                 }
-                self.errorMessage = "123"
-                
                 guard let data = snapshot?.data() else{
                     self.errorMessage = "No data found"
                     return
                     
                 }
-                //print(data)
-                //self.errorMessage = "Data: \(data.description)"
+                print(data)
                 
-                let uid = data["uid"] as? String ?? ""
-                let username = data["username"] as? String ?? ""
-                let email = data["email"] as? String ?? ""
-                let profileImageUrl = data["profileImageUrl"] as? String ?? ""
-                self.chatUser = ChatUser(uid: uid, username: username, email: email, profileImageURL: profileImageUrl)
+                //self.errorMessage = "Data: \(data.description)"  
+                self.chatUser = .init(data: data)
             }
+    }
+    
+    @Published var isUserCurrentlyLoggedOut = false
+    func handleSignOut(){
+        isUserCurrentlyLoggedOut.toggle()
+        try? FirebaseManager.shared.auth.signOut()
     }
 }
 
@@ -68,17 +68,8 @@ struct MessagesView: View {
             VStack{
                 //Text("Current user id \(vm.errorMessage)")
                 customNavBar
-                .padding(.horizontal)
-                .actionSheet(isPresented: $shouldShowLogOutOptions) {
-                    .init(title: Text("Settings"), message: Text("What do you want to do?"), buttons: [.destructive(Text("Sign Out"), action: {
-                        print("handle sign out")
-                    }),.cancel()])
-                }
+                Divider()
                 messageView
-                    .overlay(newMessageView,alignment: .bottom)
-                    .navigationBarHidden(true)
-                
-               
             }
         }
     }
@@ -92,7 +83,7 @@ struct MessagesView: View {
                 .clipped()
                 .cornerRadius(50)
                 .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label),lineWidth: 2))
-                .shadow(radius: 5)
+                .shadow(radius: 3)
             
             VStack(alignment:.leading,spacing: 4){
                 Text(vm.chatUser?.username ?? "username")
@@ -113,7 +104,19 @@ struct MessagesView: View {
                     .font(.system(size: 24,weight: .bold))
                     .foregroundColor(.black)
             }
-            
+        }
+        .padding(.horizontal)
+        .actionSheet(isPresented: $shouldShowLogOutOptions) {
+            .init(title: Text("Settings"), message: Text("What do you want to do?"), buttons: [.destructive(Text("Sign Out"), action: {
+                print("handle sign out")
+                vm.handleSignOut()
+            }),.cancel()])
+        }
+        .fullScreenCover(isPresented: $vm.isUserCurrentlyLoggedOut, onDismiss: nil) {
+            SignInView {
+                self.vm.isUserCurrentlyLoggedOut = false
+                self.vm.fetchCurrentUser()
+            }
         }
     }
     private var messageView: some View{
@@ -141,13 +144,19 @@ struct MessagesView: View {
                 Divider()
                 
             }.padding(.horizontal)
-            
-            
-            
         }
+        .overlay(newMessageButton,alignment: .bottom)
+        .navigationBarHidden(true)
     }
-    private var newMessageView: some View{
-        Button(action: {}) {
+    
+    @State var shouldShowNewMessageScreen = false
+    
+    private var newMessageButton: some View{
+        Button(action: {
+            
+            shouldShowNewMessageScreen.toggle()
+            
+        }) {
        HStack{
            Spacer()
            Text("+ New Message")
@@ -160,7 +169,9 @@ struct MessagesView: View {
        .cornerRadius(32)
        .padding(.horizontal)
        .shadow(radius: 15)
-   }
+        }.fullScreenCover(isPresented: $shouldShowNewMessageScreen){
+            CreateNewMessageView()
+        }
     }
 }
 

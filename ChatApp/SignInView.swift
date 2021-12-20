@@ -12,14 +12,16 @@ import Firebase
 
 struct SignInView: View {
 
-    @State var isLoginMode = false
-    @State var email = ""
-    @State var password = ""
-    @State var username = ""
-    @State var shouldShowImagePicker = false
-    @State var image: UIImage?
-    @State var loginStatusMessage = ""
+    @State private var isLoginMode = false
+    @State private var email = ""
+    @State private var password = ""
+    @State private var username = ""
+    @State private var shouldShowImagePicker = false
+    @State private var image: UIImage?
+    @State private var loginStatusMessage = ""
 
+    let didCompleteLoginProcess: () -> ()
+    
     var body: some View {
         
         NavigationView{
@@ -117,6 +119,12 @@ struct SignInView: View {
      
     
     private func createNewUser(){
+        
+        if self.image == nil{
+            self.loginStatusMessage = "You must select a profile image."
+            return
+        }
+        
         //Auth.auth().createUser
         FirebaseManager.shared.auth.createUser(withEmail: email, password: password) { result, err in
             if let err = err {
@@ -170,6 +178,8 @@ struct SignInView: View {
                     return
                 }
                 print("succes")
+                
+                self.didCompleteLoginProcess()
             }
         
     }
@@ -182,6 +192,8 @@ struct SignInView: View {
                 return
             }
             self.loginStatusMessage = "Succes log in!"
+            
+            self.didCompleteLoginProcess()
         }
     }
 }
@@ -189,6 +201,6 @@ struct SignInView: View {
 
 struct SignInView_Previews: PreviewProvider {
     static var previews: some View {
-        SignInView()
+        SignInView(didCompleteLoginProcess: {})
     }
 }
