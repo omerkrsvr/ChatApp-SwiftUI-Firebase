@@ -59,6 +59,7 @@ class MessagesViewModel: ObservableObject {
 
 struct MessagesView: View {
     @State var shouldShowLogOutOptions = false
+    @State var shouldNavigateToChatLogView = false
     
     @ObservedObject private var vm = MessagesViewModel()
     
@@ -70,6 +71,10 @@ struct MessagesView: View {
                 customNavBar
                 Divider()
                 messageView
+                
+                NavigationLink("", isActive: $shouldNavigateToChatLogView) {
+                    ChatLogView(chatUser: self.chatUser)
+                }
             }
         }
     }
@@ -102,7 +107,7 @@ struct MessagesView: View {
             }) {
                 Image(systemName: "gear")
                     .font(.system(size: 24,weight: .bold))
-                    .foregroundColor(.black)
+                    .foregroundColor(Color(.label))
             }
         }
         .padding(.horizontal)
@@ -122,28 +127,34 @@ struct MessagesView: View {
     private var messageView: some View{
         ScrollView{
             ForEach(0..<10, id: \.self) { num in
-                
-                HStack(spacing:16){
-                    Image(systemName: "person.fill")
-                        .font(.system(size: 32))
-                        .padding(8)
-                        .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label),lineWidth: 1))
-                    VStack(alignment:.leading){
-                        Text("Username")
-                            .fontWeight(.bold)
-                            .font(.caption)
-                        Text("Message")
-                            .font(.footnote)
-                            .foregroundColor(.gray)
+                NavigationLink {
+                    Text("Destination")
+                } label: {
+                    HStack(spacing:16){
+                        Image(systemName: "person.fill")
+                            .font(.system(size: 32))
+                            .padding(8)
+                            .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label),lineWidth: 1))
+                            .foregroundColor(Color(.label))
+                        VStack(alignment:.leading){
+                            Text("Username")
+                                .fontWeight(.bold)
+                                .font(.body)
+                                .foregroundColor(Color(.label))
+                            Text("Message")
+                                .font(.footnote)
+                                .foregroundColor(.gray)
+                        }
+                        Spacer()
+                        Text("22m")
+                            .fontWeight(.semibold)
+                            .font(.system(size: 14))
+                            .foregroundColor(Color(.label))
                     }
-                    Spacer()
-                    Text("22m")
-                        .fontWeight(.semibold)
-                        .font(.system(size: 14))
                 }
                 Divider()
-                
-            }.padding(.horizontal)
+            }
+            .padding(.horizontal)
         }
         .overlay(newMessageButton,alignment: .bottom)
         .navigationBarHidden(true)
@@ -172,15 +183,36 @@ struct MessagesView: View {
         }.fullScreenCover(isPresented: $shouldShowNewMessageScreen){
             CreateNewMessageView(didSelectNewUser: {user in
                 print(user.email)
+                self.shouldNavigateToChatLogView.toggle()
+                self.chatUser = user
             })
         }
+    }
+    
+    @State var chatUser: ChatUser?
+    
+}
+
+
+
+struct ChatLogView:View {
+    
+    let chatUser : ChatUser?
+    
+    var body: some View {
+        ScrollView{
+            ForEach(0..<10){ _ in
+                Text("FAKE MESSAGE FOR NOW")
+            }
+        }
+        .navigationTitle(chatUser?.email ?? "")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 struct MessagesView_Previews: PreviewProvider {
     static var previews: some View {
         MessagesView()
-            
-            
+                   
     }
 }
