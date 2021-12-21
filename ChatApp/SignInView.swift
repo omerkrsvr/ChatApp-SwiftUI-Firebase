@@ -64,11 +64,14 @@ struct SignInView: View {
                     Group {
                         if isLoginMode == false{
                             TextField("Username",text:$username)
+                                .autocapitalization(.none)
+                                .disableAutocorrection(true)
                         }
                         
                         TextField("Email", text: $email)
                             .keyboardType(.emailAddress)
                             .autocapitalization(.none)
+                            .disableAutocorrection(true)
                         SecureField("Password", text: $password)
                         
                     }

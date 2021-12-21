@@ -82,8 +82,8 @@ struct MessagesView: View {
                 .frame(width: 60,height: 60)
                 .clipped()
                 .cornerRadius(50)
-                .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label),lineWidth: 2))
-                .shadow(radius: 3)
+                .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label),lineWidth: 1))
+                .shadow(radius: 2)
             
             VStack(alignment:.leading,spacing: 4){
                 Text(vm.chatUser?.username ?? "username")
@@ -170,7 +170,9 @@ struct MessagesView: View {
        .padding(.horizontal)
        .shadow(radius: 15)
         }.fullScreenCover(isPresented: $shouldShowNewMessageScreen){
-            CreateNewMessageView()
+            CreateNewMessageView(didSelectNewUser: {user in
+                print(user.email)
+            })
         }
     }
 }
