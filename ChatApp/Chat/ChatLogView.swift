@@ -69,12 +69,9 @@ class ChatLogViewModel: ObservableObject {
                     }
                 })
                 
-                // burasi butun mesajlari alip tekrar gosteriyordu o yuzden yukaridaki documentchanges .added ı uyguladi.
-//                quarySnapshot?.documents.forEach({ quaryDocumentSnapshot in
-//                    let data = quaryDocumentSnapshot.data()
-//                    let docId = quaryDocumentSnapshot.documentID
-//                    self.chatMessages.append(.init(documentId: docId, data: data))
-//                })
+                DispatchQueue.main.async {
+                    self.count += 1
+                }
                 
             }
     }
@@ -102,6 +99,8 @@ class ChatLogViewModel: ObservableObject {
             }
             
             print("succesfuly saved current user sending message")
+            self.chatText = ""
+            self.count += 1
         }
         
         let recipientMessageDocument = FirebaseManager.shared.firestore
@@ -119,6 +118,7 @@ class ChatLogViewModel: ObservableObject {
         }
         
     }
+    @Published var count = 0
 }
 
 struct ChatLogView:View {
@@ -144,16 +144,27 @@ struct ChatLogView:View {
         .navigationBarTitleDisplayMode(.inline)
     }
     
+    static let emptyScrollToString = "Empty"
+    
     private var messagesView: some View{
         VStack{
             if #available(iOS 15.0, *) {
-                ScrollView{
-                    ForEach(vm.chatMessages){ message in
-                    
-                        MessageView(message: message)
-                        
+                ScrollView {
+                    ScrollViewReader { scrollViewProxy in
+                        VStack {
+                            ForEach(vm.chatMessages) { message in
+                                MessageView(message: message)
+                            }
+
+                            HStack{ Spacer() }
+                            .id(Self.emptyScrollToString)
+                        }
+                        .onReceive(vm.$count) { _ in
+                            withAnimation(.easeOut(duration: 0.5)) {
+                                scrollViewProxy.scrollTo(Self.emptyScrollToString, anchor: .bottom)
+                            }
+                        }
                     }
-                    HStack { Spacer() }
                 }
                 .background(Color(.init(white: 0.95, alpha: 1)))
                 .safeAreaInset(edge: .bottom) {
