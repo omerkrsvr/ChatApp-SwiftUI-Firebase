@@ -13,9 +13,6 @@ struct FirebaseConstants {
     static let fromId = "fromId"
     static let toId = "toId"
     static let text = "text"
-    static let timestamp = "timestamp"
-    static let profileImageUrl = "profileImageUrl"
-    static let email = "email"
 }
 
 struct ChatMessage: Identifiable {
@@ -80,7 +77,7 @@ class ChatLogViewModel: ObservableObject {
     }
     
     func handleSend() {
-        
+        print(chatText)
         guard let fromId = FirebaseManager.shared.auth.currentUser?.uid
         else{return}
         
@@ -102,9 +99,6 @@ class ChatLogViewModel: ObservableObject {
             }
             
             print("succesfuly saved current user sending message")
-            
-            self.persistRecentMessage()
-            
             self.chatText = ""
             self.count += 1
         }
@@ -124,42 +118,6 @@ class ChatLogViewModel: ObservableObject {
         }
         
     }
-    
-    private func persistRecentMessage() {
-        
-        guard let chatUser = chatUser else { return }
-        
-        guard let uid = FirebaseManager.shared.auth.currentUser?.uid
-            else { return }
-        
-        guard let toId = self.chatUser?.uid
-            else { return }
-    
-        let document = FirebaseManager.shared.firestore
-            .collection("recent_messages")
-            .document(uid)
-            .collection("messages")
-            .document(toId)
-        
-        let data = [
-            FirebaseConstants.timestamp: Timestamp(),
-            FirebaseConstants.text: self.chatText,
-            FirebaseConstants.fromId: uid,
-            FirebaseConstants.toId: toId,
-            FirebaseConstants.profileImageUrl: chatUser.profileImageURL,
-            FirebaseConstants.email: chatUser.email
-        ] as [String : Any]
-        
-        document.setData(data) { error in
-            if let error = error {
-                self.errorMessage = "Failed to save recent message \(error)"
-                print("failed to save recent message \(error)")
-                return
-            }
-        }
-        
-    }
-    
     @Published var count = 0
 }
 
