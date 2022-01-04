@@ -7,9 +7,6 @@
 
 import SwiftUI
 import SDWebImageSwiftUI
-import Firebase
-import FirebaseFirestoreSwift
-
 
 class MessagesViewModel: ObservableObject {
     
@@ -23,48 +20,6 @@ class MessagesViewModel: ObservableObject {
         }
         
         fetchCurrentUser()
-        
-        fetchRecentMessages()
-        
-    }
-    
-    @Published var recentMessages = [RecentMessage]()
-    
-    private func fetchRecentMessages(){
-        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
-        
-        FirebaseManager.shared.firestore
-            .collection("recent_messages")
-            .document(uid)
-            .collection("messages")
-            .order(by: "timestamp")
-            .addSnapshotListener { querySnapshot, error in
-                if let error = error {
-                    self.errorMessage = "Failed to listen for recent messages: \(error)"
-                    print("error")
-                    return
-                }
-                
-                querySnapshot?.documentChanges.forEach({ change in
-                   
-                        let docId = change.document.documentID
-                    
-                    if let index = self.recentMessages.firstIndex(where: { rm in
-                        return rm.id == docId
-                    }){
-                        self.recentMessages.remove(at: index)
-                    }
-                    do {
-                        if let rm = try? change.document.data(as: RecentMessage.self){
-                            self.recentMessages.insert(rm, at: 0)
-                        }
-                        
-                    }catch {
-                      print(error)
-                    }
-                })
-                
-            }
     }
     func fetchCurrentUser(){
         
@@ -171,31 +126,27 @@ struct MessagesView: View {
     }
     private var messageView: some View{
         ScrollView{
-            ForEach(vm.recentMessages) { recentMessage in
+            ForEach(0..<10, id: \.self) { num in
                 NavigationLink {
                     Text("Destination")
                 } label: {
                     HStack(spacing:16){
-                        WebImage(url: URL(string: recentMessage.profileImageUrl))
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 64, height: 64)
-                            .clipped()
-                            .cornerRadius(64)
+                        Image(systemName: "person.fill")
+                            .font(.system(size: 32))
+                            .padding(8)
                             .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label),lineWidth: 1))
+                            .foregroundColor(Color(.label))
                         VStack(alignment:.leading){
-                            Text(recentMessage.email)
+                            Text("Username")
                                 .fontWeight(.bold)
                                 .font(.body)
                                 .foregroundColor(Color(.label))
-                                .multilineTextAlignment(.leading)
-                            Text(recentMessage.text)
+                            Text("Message")
                                 .font(.footnote)
                                 .foregroundColor(.gray)
-                                .multilineTextAlignment(.leading)
                         }
                         Spacer()
-                        Text(recentMessage.timestamp.description)
+                        Text("22m")
                             .fontWeight(.semibold)
                             .font(.system(size: 14))
                             .foregroundColor(Color(.label))
