@@ -10,4 +10,6 @@ pod 'Firebase/Auth'
 pod 'Firebase/Firestore'
 pod 'Firebase/Storage'
 pod 'FirebaseFirestoreSwift', '8.3.0-beta' 
+pod 'Firebase/Analytics'
+
 end

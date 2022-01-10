@@ -12,7 +12,7 @@ import Firebase
 
 struct SignInView: View {
 
-    @State private var isLoginMode = false
+    @State private var isLoginMode = true
     @State private var email = ""
     @State private var password = ""
     @State private var username = ""
@@ -63,7 +63,7 @@ struct SignInView: View {
                     
                     Group {
                         if isLoginMode == false{
-                            TextField("Username",text:$username)
+                            TextField("Name",text:$username)
                                 .autocapitalization(.none)
                                 .disableAutocorrection(true)
                         }
@@ -89,7 +89,7 @@ struct SignInView: View {
                                 .padding(.vertical,10)
                             Spacer()
                         }
-                        .background(Color.blue)
+                        .background(Color.orange)
                         .cornerRadius(15)
                     }.padding()
                     
