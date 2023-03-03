@@ -24,7 +24,6 @@ struct RecentMessage: Codable, Identifiable {
         formatter.unitsStyle = .abbreviated
         return formatter.localizedString(for: timestamp, relativeTo: Date())
     }
-    
 }
 
 

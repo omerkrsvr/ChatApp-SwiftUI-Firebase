@@ -146,8 +146,8 @@ struct MessagesView: View {
                 .shadow(radius: 1)
             
             VStack(alignment:.leading,spacing: 4){
-                let email = vm.chatUser?.email.replacingOccurrences(of: "@gmail.com", with: "") ?? ""
-                Text(email)
+                let email = vm.chatUser?.email.components(separatedBy: "@").first
+                Text(email?.firstUppercased ?? "")
                     .fontWeight(.bold)
                 HStack(spacing:2){
                     Circle().frame(width: 10, height: 10)
@@ -203,7 +203,7 @@ struct MessagesView: View {
                             .cornerRadius(64)
                             .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label),lineWidth: 1))
                         VStack(alignment:.leading){
-                            Text(recentMessage.username)
+                            Text(recentMessage.username.firstUppercased)
                                 .fontWeight(.bold)
                                 .font(.body)
                                 .foregroundColor(Color(.label))

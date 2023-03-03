@@ -27,11 +27,9 @@ class CreateNewMessageViewModel: ObservableObject {
                 }
                 
                 documentsSnapshot?.documents.forEach({snapshot in
-                    snapshot.data()
-                    let data = snapshot.data()
-                    let user = ChatUser(data: data)
-                    if user.uid != FirebaseManager.shared.auth.currentUser?.uid {
-                        self.users.append(.init(data: data))
+                    let user = try? snapshot.data(as: ChatUser.self)
+                    if user?.uid != FirebaseManager.shared.auth.currentUser?.uid {
+                        self.users.append(user!)
                     }
                 })
                // self.errorMessage = "Fetched user succesfuly"
@@ -62,7 +60,7 @@ struct CreateNewMessageView: View {
                     } label: {
                         HStack(spacing:12){
                             
-                            WebImage(url: URL(string: user.profileImageURL))
+                            WebImage(url: URL(string: user.profileImageUrl))
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: 60,height: 60)
